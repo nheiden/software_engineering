@@ -45,7 +45,22 @@ public class Core {
 			System.exit(-1);
 		}
 		if (inputFileName != null) {
-			inputFile = new File("dropoff/"+inputFileName);
+			try {
+				inputFile = new File("dropoff/"+inputFileName);
+			} catch (Exception e) {
+				System.out.println("java.io.File error, cannot open "+inputFileName);
+				try {
+					log.write(calendar.get(Calendar.YEAR)+" - "+(calendar.get(Calendar.MONTH)+1)+" - "+calendar.get(Calendar.DAY_OF_MONTH)+
+							": "+calendar.get(Calendar.HOUR_OF_DAY)+":"+calendar.get(Calendar.MINUTE)+":"+calendar.get(Calendar.SECOND)+" -\r\n"+
+							"ERROR DETECTED: java.io.File error, cannot open "+inputFileName+"\r\n"
+					);
+					log.close();
+				} catch (Exception ex) {
+					// Log write failure. Exiting anyway...
+					// Bad practice, you want to do something here if logging fails in order to avoid misinterpretation of errors.
+				}
+				System.exit(-1);
+			}
 		}
 		int count = 0;
 		if(inputFile.exists()){
@@ -89,6 +104,7 @@ public class Core {
 			
 		}
 		else{
+			System.out.println("Files are checked for under the 'dropoff' directory where the code is located.");
 			System.out.println("File does not Exist, exiting...");
 			try {
 				log.write(calendar.get(Calendar.YEAR)+" - "+(calendar.get(Calendar.MONTH)+1)+" - "+calendar.get(Calendar.DAY_OF_MONTH)+
